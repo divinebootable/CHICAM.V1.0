@@ -6,6 +6,8 @@ const app = express();
 // ==> API Routes:
 const index = require("./routes/index");
 const categoryRoute = require("./routes/category.routes");
+const brandRoute = require("./routes/brand.routes");
+const vehicleRoute = require("./routes/vehicle.routes");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -14,5 +16,7 @@ app.use(cors());
 
 app.use(index);
 app.use("/api/", categoryRoute);
+app.use("/api/", brandRoute);
+app.use("/api/", vehicleRoute);
 
 module.exports = app;
