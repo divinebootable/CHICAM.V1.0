@@ -1,7 +1,7 @@
 /**
  * File: src/api_v1/controllers/brand.controller.js
  * Description: brand controller for chicam inventory system
- * Date: 14/08/20201
+ * Date: 14/08/2021
  * Author: Monyuy Divine Kongadzem
  */
 

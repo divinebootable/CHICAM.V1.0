@@ -1,0 +1,15 @@
+module.exports = function (req, res, next) {
+  const { username, password } = req.body;
+
+  function validEmail(userEmail) {
+    return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(userEmail);
+  }
+
+  if (req.path === "/signIn") {
+    if (![username, password].every(Boolean)) {
+      return res.json("Missing Credentials");
+    }
+  }
+
+  next();
+};
