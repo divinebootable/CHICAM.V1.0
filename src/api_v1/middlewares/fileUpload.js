@@ -1,6 +1,6 @@
 const path = require("path");
 
-function fileUpload(req, res, next) {
+module.exports = function (req, res, next) {
   console.log(req);
   let sampleFile;
   let uploadPath;
@@ -25,4 +25,4 @@ function fileUpload(req, res, next) {
   });
   req.body.filepath = uploadPath;
   next();
-}
+};

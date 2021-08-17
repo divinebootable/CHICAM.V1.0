@@ -20,7 +20,6 @@ const addProduct = (req, res) => {
     filepath,
     created_on,
   } = req.body;
-  console.log(req.body);
   db("products")
     .insert({
       size,
@@ -41,6 +40,41 @@ const addProduct = (req, res) => {
     .catch((err) => res.status(400).json({ Error: "bad request" }));
 };
 
+// get products for each warehouse.
+
+const getProducts = (req, res) => {
+  const { users } = req.params;
+  console.log(req.params);
+  db("products")
+    .join("category", "products.category", "=", "category.category_id")
+    .join("brand", "products.brand", "=", "brand.brand_id")
+    .join("profile", "products.profile", "=", "profile.profile_id")
+    .join("vehicle", "products.vehicle", "=", "vehicle.vehicle_id")
+    .select(
+      "products.product_id",
+      "products.size",
+      "products.price",
+      "products.quantity",
+      "products.filepath",
+      "category.category",
+      "brand.brand_name",
+      "profile.profile_name",
+      "vehicle.vehicle_name",
+      "products.created_on"
+    )
+    .where("products.users", users)
+    .where("products.is_delete", false)
+    .then((product) => {
+      if (product.length) {
+        res.json(product);
+      } else {
+        res.status(400).json("Not found");
+      }
+    })
+    .catch((err) => res.status(400).json({ Error: "bad request" }));
+};
+
 module.exports = {
   addProduct,
+  getProducts,
 };
