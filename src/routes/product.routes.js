@@ -15,6 +15,6 @@ const fileUpload = require("../api_v1/middlewares/fileUpload");
 router.post("/add_product", fileUpload, productController.addProduct);
 router.get("/products/:users", productController.getProductsByWarehouseId);
 router.get("/products", productController.getAllproducts);
-// router.delete("/delete_brand", brandController.deleteBrand);
+router.put("/update_product", productController.updateProduct);
 
 module.exports = router;

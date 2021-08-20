@@ -103,8 +103,54 @@ const getAllproducts = (req, res) => {
     .catch((err) => res.status(400).json({ Error: "bad request" }));
 };
 
+const updateProduct = (req, res) => {
+  const {
+    product_id,
+    size,
+    price,
+    quantity,
+    category,
+    users,
+    brand,
+    profile,
+    vehicle,
+    filepath,
+  } = req.body;
+  console.log(req.body);
+  db("products")
+    .select({ product_id })
+    .where(`product_id`, product_id)
+    .then((data) => {
+      if (data.length) {
+        db("products")
+          .update({
+            size,
+            price,
+            quantity,
+            category,
+            users,
+            brand,
+            profile,
+            vehicle,
+            filepath,
+          })
+          .where("product_id", product_id)
+          .where("is_delete", false)
+          .returning("*")
+          .then((data) => {
+            res.json(data);
+          })
+          .catch((err) => res.status(400).json({ Error: "bad request" }));
+      } else {
+        res.status(400).json("bad request");
+      }
+    })
+    .catch((err) => res.status(400).json({ Error: "bad request" }));
+};
+
 module.exports = {
   addProduct,
   getProductsByWarehouseId,
   getAllproducts,
+  updateProduct,
 };

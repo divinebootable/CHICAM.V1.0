@@ -43,6 +43,8 @@ const updateBrand = (req, res) => {
           .then((data) => {
             res.json(data);
           });
+      } else {
+        res.status(400).json(" data not found");
       }
     })
     .catch((err) => res.status(400).json({ dbError: "bad request" }));
