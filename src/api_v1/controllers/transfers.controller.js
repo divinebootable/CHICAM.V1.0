@@ -45,7 +45,21 @@ const getTransferByWarehouseId = (req, res) => {
     .catch((err) => res.status(400).json({ Error: "bad request" }));
 };
 
+const getAllTransfers = (req, res) => {
+  db("transfers")
+    .select("*")
+    .then((data) => {
+      if (data) {
+        res.status(200).json(data);
+      } else {
+        res.status(400).json("Not found");
+      }
+    })
+    .catch((err) => res.status(400).json({ Error: "bad request" }));
+};
+
 module.exports = {
   createTranfer,
   getTransferByWarehouseId,
+  getAllTransfers,
 };
