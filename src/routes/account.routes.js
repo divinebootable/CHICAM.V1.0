@@ -16,7 +16,10 @@ const accountController = require("../api_v1/controllers/account.controller");
 router.post("/signIn", validateInputData, accountController.signIn);
 router.post("/add_account", accountController.createAccount);
 router.get("/all_accounts", accountController.getAllAccounts);
+router.get("/accounts/:users", accountController.getAllAccountsById);
 router.put("/block_account", accountController.blockAccount);
+router.put("/unblock_account", accountController.UnBlockAccount);
+router.put("/update_account", accountController.updateAccount);
 //  router.delete("/delete_brand", brandController.deleteBrand);
 
 module.exports = router;

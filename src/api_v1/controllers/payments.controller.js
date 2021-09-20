@@ -1,17 +1,31 @@
 /**
- * File: src/api_v1/controllers/expense.controller.js
- * Description: expense controller for chicam inventory system
- * Date: 18/08/2021
+ * File: src/api_v1/controllers/payments.controller.js
+ * Description: payment controller for chicam inventory system
+ * Date: 20/08/2021
  * Author: Monyuy Divine Kongadzem
  */
 
 const db = require("../../../data/db");
 
-const createExpense = (req, res) => {
-  const { expense, amount, users, created_on } = req.body;
+const createPayment = (req, res) => {
+  const {
+    total_amount,
+    amount_paid,
+    pending_amount,
+    users,
+    sales,
+    created_on,
+  } = req.body;
   console.log(req.body);
   db("expenses")
-    .insert({ expense, amount, users, created_on })
+    .insert({
+      total_amount,
+      amount_paid,
+      pending_amount,
+      users,
+      sales,
+      created_on,
+    })
     .returning("*")
     .then((data) => {
       res.json(data);
@@ -19,19 +33,25 @@ const createExpense = (req, res) => {
     .catch((err) => res.status(400).json({ Error: "bad request" }));
 };
 
-const getExpenseByWarehouseId = (req, res) => {
+const getPaymentByWarehouseId = (req, res) => {
   const { users } = req.params;
-  db("expenses")
-    .join("users", "expenses.users", "=", "users.users_id")
+  db("payments")
+    .join("users", "payments.users", "=", "users.users_id")
+    .join("sales", "payments.sales", "=", "sales.sales_id")
     .select(
-      "expenses.expenses_id",
-      "expenses.expense",
-      "expenses.amount",
+      "payments.payment_id",
+      "payments.totat_amount",
+      "payments.amount_paid",
+      "payments.pending_amount",
+      "payments.pending_status",
       "users.warehouse",
-      "users.username"
+      "users.username",
+      "sales.customer_name",
+      "sales.product",
+      "sales.quantity",
+      "payments.created_on"
     )
-    .where("expenses.users", users)
-    .where("expenses.is_delete", false)
+    .where("payments.users", users)
     .then((data) => {
       if (data) {
         res.status(200).json(data);
@@ -46,12 +66,12 @@ const getAllExpenses = (req, res) => {
   db("expenses")
     .join("users", "expenses.users", "=", "users.users_id")
     .select(
-      "expenses.expenses_id",
       "expenses.expense",
       "expenses.amount",
       "users.warehouse",
       "users.username"
     )
+    .where("expenses.users", users)
     .where("expenses.is_delete", false)
     .then((data) => {
       if (data) {
@@ -106,9 +126,6 @@ const deleteExpense = (req, res) => {
 };
 
 module.exports = {
-  createExpense,
-  getExpenseByWarehouseId,
-  getAllExpenses,
-  updateExpense,
-  deleteExpense,
+  createPayment,
+  getPaymentByWarehouseId,
 };

@@ -8,7 +8,7 @@
 const db = require("../../../data/db");
 
 const createSales = (req, res) => {
-  const { product, users, created_on } = req.body;
+  const { customer_name,customer_phone,customer_address,quantity,product, users, created_on } = req.body;
   console.log(req.body);
   db("sales")
     .insert({
@@ -43,6 +43,7 @@ const getSalesByWarehouseId = (req, res) => {
       "sales.sales_status",
       "products.product_id",
       "users.warehouse",
+      "users.username",
       "sales.created_on"
     )
     .where("sales.users", users)
