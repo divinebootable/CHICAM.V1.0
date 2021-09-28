@@ -15,6 +15,8 @@ router.post("/add_sales", salesController.createSales);
 router.get("/sales/:users", salesController.getSalesByWarehouseId);
 router.get("/all_sales", salesController.getAllSales);
 router.get("/monthly_report", salesController.salesReportPerMonth);
+router.get("/weekly_report", salesController.salesReportPerWeek);
+router.get("/day_report", salesController.salesReportPerday);
 router.put("/validate", salesController.validateSales);
 router.put("/update_sales", salesController.updateSales);
 //  router.delete("/delete_sales", salesController.deleteSales);

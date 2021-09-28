@@ -109,9 +109,6 @@ const getAllSales = (req, res) => {
 };
 
 const salesReportPerMonth = (req, res) => {
-  const currentdate = new Date();
-  const days = 30;
-  const compareDate = currentdate.setDate(currentdate.getDate() - days);
   db.raw(
     `select sales.sales_id,sales.customer_name,sales.customer_phone,
   sales.customer_address,sales.quantity,sales.sales_price,sales.sales_status,
@@ -120,29 +117,46 @@ const salesReportPerMonth = (req, res) => {
   join products on sales.product = products.product_id
   join users on sales.users = users.users_id
   where sales.created_on > current_date - interval '29 days'
+  ORDER BY sales.created_on DESC
   `
   )
-    .then((product) => {
-      res.json(product);
+    .then((sales) => {
+      res.json(sales);
     })
     .catch((err) => res.status(400).json({ Error: "bad request" }));
 };
 
 const salesReportPerWeek = (req, res) => {
   db.raw(
-    `select * from sales where returned_date > current_date - interval '7 days'
+    `select sales.sales_id,sales.customer_name,sales.customer_phone,
+  sales.customer_address,sales.quantity,sales.sales_price,sales.sales_status,
+  products.product_id,products.price,products.profile,products.vehicle,products.brand,
+  products.product_id,users.warehouse,sales.created_on from sales 
+  join products on sales.product = products.product_id
+  join users on sales.users = users.users_id
+  where sales.created_on > current_date - interval '6 days'
   `
   )
-    .then((product) => {
-      res.json(product);
+    .then((sales) => {
+      res.json(sales);
     })
     .catch((err) => res.status(400).json({ Error: "bad request" }));
 };
 
 const salesReportPerday = (req, res) => {
-  db.raw(``)
-    .then((product) => {
-      res.json(product);
+  db.raw(
+    `select sales.sales_id,sales.customer_name,sales.customer_phone,
+  sales.customer_address,sales.quantity,sales.sales_price,sales.sales_status,
+  products.product_id,products.price,products.profile,products.vehicle,products.brand,
+  products.product_id,users.warehouse,sales.created_on from sales 
+  join products on sales.product = products.product_id
+  join users on sales.users = users.users_id
+  where sales.created_on BETWEEN NOW() - INTERVAL '24 HOURS' AND NOW()
+  ORDER BY sales.created_on DESC
+  `
+  )
+    .then((sales) => {
+      res.json(sales);
     })
     .catch((err) => res.status(400).json({ Error: "bad request" }));
 };
