@@ -28,7 +28,8 @@ const getExpenseByWarehouseId = (req, res) => {
       "expenses.expense",
       "expenses.amount",
       "users.warehouse",
-      "users.username"
+      "users.username",
+      "expenses.created_on"
     )
     .where("expenses.users", users)
     .where("expenses.is_delete", false)
@@ -50,7 +51,9 @@ const getAllExpenses = (req, res) => {
       "expenses.expense",
       "expenses.amount",
       "users.warehouse",
-      "users.username"
+      "users.username",
+      "expenses.created_on",
+      "expenses.is_delete"
     )
     .where("expenses.is_delete", false)
     .then((data) => {

@@ -16,24 +16,36 @@ const createSales = (req, res) => {
     quantity,
     product,
     users,
+    sales_price,
     created_on,
   } = req.body;
   console.log(req.body);
-  db("sales")
-    .insert({
-      customer_name,
-      customer_phone,
-      customer_address,
-      quantity,
-      product,
-      users,
-      created_on,
+  db("products")
+    .select("products.quantity")
+    .where("products.product_id", product)
+    .then((productQuantity) => {
+      if (parseInt(productQuantity[0].quantity) > parseInt(quantity)) {
+        db("sales")
+          .insert({
+            customer_name,
+            customer_phone,
+            customer_address,
+            quantity,
+            product,
+            users,
+            sales_price,
+            created_on,
+          })
+          .returning("*")
+          .then((data) => {
+            res.json(data);
+          })
+          .catch((err) => res.status(400).json({ Error: "bad request" }));
+      } else {
+        res.status(500).json("insufficient products");
+      }
     })
-    .returning("*")
-    .then((data) => {
-      res.json(data);
-    })
-    .catch((err) => res.status(400).json({ Error: "bad request" }));
+    .catch((err) => res.status(500).json({ Error: "bad request" }));
 };
 
 // get all sales based on warehouse id
@@ -42,6 +54,9 @@ const getSalesByWarehouseId = (req, res) => {
   const { users } = req.params;
   db("sales")
     .join("products", "sales.product", "=", "products.product_id")
+    .join("brand", "products.brand", "=", "brand.brand_id")
+    .join("profile", "products.profile", "=", "profile.profile_id")
+    .join("vehicle", "products.vehicle", "=", "vehicle.vehicle_id")
     .join("users", "sales.users", "=", "users.users_id")
     .select(
       "sales.sales_id",
@@ -53,13 +68,17 @@ const getSalesByWarehouseId = (req, res) => {
       "sales.sales_status",
       "products.product_id",
       "products.price",
-      "products.quantity",
+      //"products.quantity",
       "products.profile",
+      "profile.profile_name",
       "products.vehicle",
+      "vehicle.vehicle_name",
       "products.brand",
+      "brand.brand_name",
+      "products.category",
+      "category.category",
       "products.product_id",
       "users.warehouse",
-      "users.username",
       "sales.created_on"
     )
     .where("sales.users", users)
@@ -78,6 +97,10 @@ const getSalesByWarehouseId = (req, res) => {
 const getAllSales = (req, res) => {
   db("sales")
     .join("products", "sales.product", "=", "products.product_id")
+    .join("brand", "products.brand", "=", "brand.brand_id")
+    .join("profile", "products.profile", "=", "profile.profile_id")
+    .join("vehicle", "products.vehicle", "=", "vehicle.vehicle_id")
+    .join("category", "products.category", "=", "category.category_id")
     .join("users", "sales.users", "=", "users.users_id")
     .select(
       "sales.sales_id",
@@ -91,9 +114,13 @@ const getAllSales = (req, res) => {
       "products.price",
       //"products.quantity",
       "products.profile",
+      "profile.profile_name",
       "products.vehicle",
+      "vehicle.vehicle_name",
       "products.brand",
+      "brand.brand_name",
       "products.category",
+      "category.category",
       "products.product_id",
       "users.warehouse",
       "sales.created_on"
@@ -112,9 +139,12 @@ const salesReportPerMonth = (req, res) => {
   db.raw(
     `select sales.sales_id,sales.customer_name,sales.customer_phone,
   sales.customer_address,sales.quantity,sales.sales_price,sales.sales_status,
-  products.product_id,products.price,products.profile,products.vehicle,products.brand,
+  products.product_id,products.price,products.profile,profile.profile_name,products.vehicle,vehicle.vehicle_name,products.brand,brand.brand_name,
   products.product_id,users.warehouse,sales.created_on from sales 
   join products on sales.product = products.product_id
+  join brand on products.brand = brand.brand_id
+  join profile on products.profile = profile.profile_id
+  join vehicle on products.vehicle = vehicle.vehicle_id
   join users on sales.users = users.users_id
   where sales.created_on > current_date - interval '29 days'
   ORDER BY sales.created_on DESC
@@ -129,12 +159,16 @@ const salesReportPerMonth = (req, res) => {
 const salesReportPerWeek = (req, res) => {
   db.raw(
     `select sales.sales_id,sales.customer_name,sales.customer_phone,
-  sales.customer_address,sales.quantity,sales.sales_price,sales.sales_status,
-  products.product_id,products.price,products.profile,products.vehicle,products.brand,
-  products.product_id,users.warehouse,sales.created_on from sales 
-  join products on sales.product = products.product_id
-  join users on sales.users = users.users_id
+    sales.customer_address,sales.quantity,sales.sales_price,sales.sales_status,
+    products.product_id,products.price,products.profile,profile.profile_name,products.vehicle,vehicle.vehicle_name,products.brand,brand.brand_name,
+    products.product_id,users.warehouse,sales.created_on from sales 
+    join products on sales.product = products.product_id
+    join brand on products.brand = brand.brand_id
+    join profile on products.profile = profile.profile_id
+    join vehicle on products.vehicle = vehicle.vehicle_id
+    join users on sales.users = users.users_id
   where sales.created_on > current_date - interval '6 days'
+  ORDER BY sales.created_on DESC
   `
   )
     .then((sales) => {
@@ -146,11 +180,14 @@ const salesReportPerWeek = (req, res) => {
 const salesReportPerday = (req, res) => {
   db.raw(
     `select sales.sales_id,sales.customer_name,sales.customer_phone,
-  sales.customer_address,sales.quantity,sales.sales_price,sales.sales_status,
-  products.product_id,products.price,products.profile,products.vehicle,products.brand,
-  products.product_id,users.warehouse,sales.created_on from sales 
-  join products on sales.product = products.product_id
-  join users on sales.users = users.users_id
+    sales.customer_address,sales.quantity,sales.sales_price,sales.sales_status,
+    products.product_id,products.price,products.profile,profile.profile_name,products.vehicle,vehicle.vehicle_name,products.brand,brand.brand_name,
+    products.product_id,users.warehouse,sales.created_on from sales 
+    join products on sales.product = products.product_id
+    join brand on products.brand = brand.brand_id
+    join profile on products.profile = profile.profile_id
+    join vehicle on products.vehicle = vehicle.vehicle_id
+    join users on sales.users = users.users_id
   where sales.created_on BETWEEN NOW() - INTERVAL '24 HOURS' AND NOW()
   ORDER BY sales.created_on DESC
   `
@@ -223,6 +260,24 @@ const updateSales = (req, res) => {
     .catch((err) => res.status(400).json({ dbError: "bad request" }));
 };
 
+const getTotalOfAllSalesPerWarehouse = (req, res) => {
+  db.raw(
+    `select sum(sales_id), users.warehouse from sales join users on sales.users=users.users_id group by users.warehouse`
+  )
+    .then((sales) => {
+      res.json(sales);
+    })
+    .catch((err) => res.status(400).json({ Error: "bad request" }));
+};
+
+const totalNumberOfSales = (req, res) => {
+  db.raw(`select sum(sales_id) from sales`)
+    .then((sales) => {
+      res.json(sales);
+    })
+    .catch((err) => res.status(400).json({ Error: "bad request" }));
+};
+
 module.exports = {
   createSales,
   getSalesByWarehouseId,
@@ -232,4 +287,6 @@ module.exports = {
   salesReportPerWeek,
   salesReportPerday,
   salesReportPerMonth,
+  totalNumberOfSales,
+  getTotalOfAllSalesPerWarehouse,
 };

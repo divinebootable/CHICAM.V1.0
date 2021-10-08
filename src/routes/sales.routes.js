@@ -16,9 +16,14 @@ router.get("/sales/:users", salesController.getSalesByWarehouseId);
 router.get("/all_sales", salesController.getAllSales);
 router.get("/monthly_report", salesController.salesReportPerMonth);
 router.get("/weekly_report", salesController.salesReportPerWeek);
-router.get("/day_report", salesController.salesReportPerday);
+router.get("/daily_report", salesController.salesReportPerday);
 router.put("/validate", salesController.validateSales);
 router.put("/update_sales", salesController.updateSales);
+router.get("/total_sales", salesController.totalNumberOfSales);
+router.get(
+  "/total_salesPerWarehouse",
+  salesController.getTotalOfAllSalesPerWarehouse
+);
 //  router.delete("/delete_sales", salesController.deleteSales);
 
 module.exports = router;

@@ -13,8 +13,12 @@ const transferController = require("../api_v1/controllers/transfers.controller")
 // ==> Route responsible for adding a new 'sales':(POST ) localhost: 3000/api/sales
 router.post("/add_transfer", transferController.createTranfer);
 router.get("/transfer/:users", transferController.getTransferByWarehouseId);
-router.get("/transfer_made/:users", transferController.getTransfersMadeByWarehouseId);
-router.get("/all_transfers", transferController.getAllTransfers);
+router.get(
+  "/transfer_made/:users",
+  transferController.getTransfersMadeByWarehouseId
+);
+router.get("/out_transfers", transferController.getAllOutGoingTransfers);
+router.get("/in_transfers", transferController.getAllIncomingTransfers);
 
 // work still to be done yeah if possible separate validateds transfer from non-validated transfer.
 
