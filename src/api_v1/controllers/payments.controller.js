@@ -9,7 +9,6 @@ const db = require("../../../data/db");
 
 const createPayment = (req, res) => {
   const {
-    total_amount,
     amount_paid,
     pending_amount,
     users,
@@ -19,7 +18,6 @@ const createPayment = (req, res) => {
   console.log(req.body);
   db("expenses")
     .insert({
-      total_amount,
       amount_paid,
       pending_amount,
       users,
@@ -40,7 +38,6 @@ const getPaymentByWarehouseId = (req, res) => {
     .join("sales", "payments.sales", "=", "sales.sales_id")
     .select(
       "payments.payment_id",
-      "payments.totat_amount",
       "payments.amount_paid",
       "payments.pending_amount",
       "payments.pending_status",
@@ -49,6 +46,7 @@ const getPaymentByWarehouseId = (req, res) => {
       "sales.customer_name",
       "sales.product",
       "sales.quantity",
+      "sales.sales_price",
       "payments.created_on"
     )
     .where("payments.users", users)
@@ -62,17 +60,23 @@ const getPaymentByWarehouseId = (req, res) => {
     .catch((err) => res.status(400).json({ Error: "bad request" }));
 };
 
-const getAllExpenses = (req, res) => {
-  db("expenses")
-    .join("users", "expenses.users", "=", "users.users_id")
+const getAllPayments = (req, res) => {
+  db("payments")
+    .join("users", "payments.users", "=", "users.users_id")
+    .join("sales", "payments.sales", "=", "sales.sales_id")
     .select(
-      "expenses.expense",
-      "expenses.amount",
+      "payments.payment_id",
+      "payments.amount_paid",
+      "payments.pending_amount",
+      "payments.pending_status",
       "users.warehouse",
-      "users.username"
+      "users.username",
+      "sales.customer_name",
+      "sales.product",
+      "sales.quantity",
+      "sales.sales_price",
+      "payments.created_on"
     )
-    .where("expenses.users", users)
-    .where("expenses.is_delete", false)
     .then((data) => {
       if (data) {
         res.status(200).json(data);
@@ -128,4 +132,5 @@ const deleteExpense = (req, res) => {
 module.exports = {
   createPayment,
   getPaymentByWarehouseId,
+  getAllPayments
 };

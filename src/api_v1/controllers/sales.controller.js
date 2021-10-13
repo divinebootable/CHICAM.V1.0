@@ -57,16 +57,17 @@ const getSalesByWarehouseId = (req, res) => {
     .join("brand", "products.brand", "=", "brand.brand_id")
     .join("profile", "products.profile", "=", "profile.profile_id")
     .join("vehicle", "products.vehicle", "=", "vehicle.vehicle_id")
+    .join("category", "products.category", "=", "category.category_id")
     .join("users", "sales.users", "=", "users.users_id")
     .select(
       "sales.sales_id",
+      "sales.users",  
       "sales.customer_name",
       "sales.customer_phone",
       "sales.customer_address",
       "sales.quantity",
       "sales.sales_price",
       "sales.sales_status",
-      "products.product_id",
       "products.price",
       //"products.quantity",
       "products.profile",
@@ -82,9 +83,10 @@ const getSalesByWarehouseId = (req, res) => {
       "sales.created_on"
     )
     .where("sales.users", users)
-    .then((sales) => {
-      if (sales) {
-        res.status(200).json(sales);
+    .then((data) => {
+      console.log(data + "sales")
+      if (data.length > 0) {
+        res.status(200).json(data);
       } else {
         res.status(400).json("Not found");
       }
