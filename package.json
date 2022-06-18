@@ -2,9 +2,9 @@
   "name": "Chicam.V1.0",
   "version": "1.0.0",
   "description": "Chicam API Services",
-  "main": "nodemon server.js",
+  "main": "node server.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
