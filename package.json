@@ -2,9 +2,9 @@
   "name": "Chicam.V1.0",
   "version": "1.0.0",
   "description": "Chicam API Services",
-  "main": "node server.js",
+  "main": "nodemon server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
@@ -12,7 +12,7 @@
   "devDependencies": {
     "husky": "^7.0.1",
     "nodeman": "^1.1.2",
-    "nodemon": "^2.0.16"
+    "nodemon": "^2.0.12"
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
