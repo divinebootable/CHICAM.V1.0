@@ -2,7 +2,7 @@
   "name": "Chicam.V1.0",
   "version": "1.0.0",
   "description": "Chicam API Services",
-  "main": "server.js",
+  "main": "nodemon server.js",
   "scripts": {
     "start": "nodemon server.js"
   },
