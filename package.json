@@ -12,7 +12,7 @@
   "devDependencies": {
     "husky": "^7.0.1",
     "nodeman": "^1.1.2",
-    "nodemon": "^2.0.12"
+    "nodemon": "^2.0.16"
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
@@ -23,7 +23,6 @@
     "express-promise-router": "^4.1.0",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.21.21",
-    "pg": "^8.7.1",
-    "nodemon": "^2.0.12"
+    "pg": "^8.7.1"
   }
 }
