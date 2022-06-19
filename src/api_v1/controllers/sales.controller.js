@@ -5,7 +5,7 @@
  * Author: Monyuy Divine Kongadzem
  */
 
-const { returning } = require("../../../data/db");
+//const { returning } = require("../../../data/db");
 const db = require("../../../data/db");
 
 const createSales = (req, res) => {
@@ -61,7 +61,7 @@ const getSalesByWarehouseId = (req, res) => {
     .join("users", "sales.users", "=", "users.users_id")
     .select(
       "sales.sales_id",
-      "sales.users",  
+      "sales.users",
       "sales.customer_name",
       "sales.customer_phone",
       "sales.customer_address",
@@ -84,7 +84,7 @@ const getSalesByWarehouseId = (req, res) => {
     )
     .where("sales.users", users)
     .then((data) => {
-      console.log(data + "sales")
+      console.log(data + "sales");
       if (data.length > 0) {
         res.status(200).json(data);
       } else {
