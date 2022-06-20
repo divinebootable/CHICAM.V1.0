@@ -6,13 +6,15 @@ create table users(
     role VARCHAR NOT NULL DEFAULT 'user',
     warehouse VARCHAR,
     is_delete boolean NOT NULL DEFAULT FALSE,
-    created_on TIMESTAMP NOT NULL
+    created_on TIMESTAMP NOT NULL,
+    blocked boolean NOT NULL DEFAULT FALSE
 );
 
 create table login(
      login_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
      username VARCHAR UNIQUE NOT NULL,
-     hash VARCHAR(255) NOT NULL
+     hash VARCHAR(255) NOT NULL,
+     blocked boolean NOT NULL DEFAULT FALSE
 );
 
 create table brand(
@@ -41,15 +43,18 @@ create table category(
 
 create table products(
     product_id serial PRIMARY KEY,
+    code VARCHAR UNIQUE NOT NULL,
     size VARCHAR NOT NULL,
     price NUMERIC NOT NULL,
     quantity VARCHAR NOT NULL,
-    category serial NOT NULL,
+    category serial NOT NULL,                                            
     users serial NOT NULL,
-    brand serial NOT NULL,
-    profile serial NOT NULL,
-    vehicle serial NOT NULL,
-    filepath VARCHAR(255) NOT NULL,
+    brand serial ,
+    profile serial ,
+    vehicle serial ,
+    filepath VARCHAR(255),
+    sold boolean NOT NULL DEFAULT FALSE,
+    is_delete boolean NOT NULL DEFAULT FALSE,   
     created_on TIMESTAMP NOT NULL,
     FOREIGN KEY (users) REFERENCES users(users_id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (brand) REFERENCES brand(brand_id) ON UPDATE CASCADE ON DELETE CASCADE,
@@ -60,7 +65,7 @@ create table products(
 
 create table sales(
     sales_id serial PRIMARY KEY,
-    sales_number VARCHAR UNIQUE NOT NULL,
+    sales_number VARCHAR UNIQUE,
     customer_name VARCHAR NOT NULL,
     customer_phone VARCHAR NOT NULL,
     customer_address VARCHAR NOT NULL,
@@ -100,6 +105,7 @@ create table  outgoingtransfers(
     quantity VARCHAR NOT NULL,
     product serial NOT NULL,
     transfer_from serial NOT NULL,
+    transfer_state boolean NOT NULL DEFAULT FALSE,
     created_on TIMESTAMP NOT NULL DEFAULT current_timestamp,
     FOREIGN KEY (product) REFERENCES products(product_id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (transfer_from) REFERENCES users(users_id) ON UPDATE CASCADE ON DELETE CASCADE
@@ -110,15 +116,15 @@ create table incomingtransfers(
     quantity VARCHAR NOT NULL,
     product serial NOT NULL,
     transfer_to serial NOT NULL,
+    transfer_state boolean NOT NULL DEFAULT FALSE,
+    transfer_from serial NOT NULL,
     created_on TIMESTAMP NOT NULL DEFAULT current_timestamp,
     FOREIGN KEY (product) REFERENCES products(product_id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (transfer_to) REFERENCES users(users_id) ON UPDATE CASCADE ON DELETE CASCADE
-
 );
 
 create table payments(
     payment_id serial PRIMARY KEY,
-    total_amount numeric NOT NULL,
     amount_paid numeric NOT NULL,
     pending_amount numeric,
     payment_status boolean NOT NULL DEFAULT FALSE,
