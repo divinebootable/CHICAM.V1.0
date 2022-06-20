@@ -5,6 +5,8 @@
  * Author: Monyuy Divine Kongadzem
  */
 
+// error
+
 const db = require("../../../data/db");
 
 const createCategory = (req, res) => {
