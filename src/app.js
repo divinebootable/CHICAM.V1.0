@@ -6,7 +6,7 @@ const app = express();
 
 // ==> API Routes:
 const index = require("./routes/index");
-const categoryRoute = require("./routes/category.routes");
+//const categoryRoute = require("./routes/category.routes");
 const brandRoute = require("./routes/brand.routes");
 const vehicleRoute = require("./routes/vehicle.routes");
 const accountRoute = require("./routes/account.routes");
@@ -25,7 +25,7 @@ app.use(fileupload());
 app.use("./uploads", express.static(__dirname + "./uploads"));
 
 app.use(index);
-app.use("/api/", categoryRoute);
+//app.use("/api/", categoryRoute);
 app.use("/api/", brandRoute);
 app.use("/api/", vehicleRoute);
 app.use("/api/", accountRoute);
