@@ -5,51 +5,50 @@
  * Author: Monyuy Divine Kongadzem
  */
 
-const db = require("../../../data/db");
+const db = require("../../../config/db");
 
 const createTranfer = (req, res) => {
   const { quantity, product, transfer_from, transfer_to, created_on } =
     req.body;
-   db("products")
-     .select("products.quantity")
-     .where("products.product_id", product)
-     .then((productQuantity)=>{
-        if(parseInt(productQuantity[0].quantity) >= parseInt(quantity)){
-           console.log(true)
-         db.transaction((trx) => {
-                trx
-                 .insert({
-                   quantity: quantity,
-                    product: product,
-                    transfer_from: transfer_from,
-                    created_on: created_on,
-                  })
-                 .into("outgoingtransfers")
-                  .returning("*")
-                  .then((data) => {
-                    return trx("incomingtransfers")
-                     .insert({
-                          quantity: quantity,
-                         product: product,
-                         transfer_to: transfer_to,
-                         transfer_from: transfer_from,
-                         created_on: created_on,
-                        })
-                      .returning("*")
-                      .then((data) => {
-                      res.status(200).json("transfer successful");
-                     })
-                      .catch((err) => res.status(400).json({ Error: "bad request" }));
-                 })
-                 .then(trx.commit)
-                 .catch(trx.rollback);
-             })
-        
-   }else{
-      res.status(500)
-   }
-     })
-     .catch((error)=> res.status(500).json({Error: "insufficient products"}))
+  db("products")
+    .select("products.quantity")
+    .where("products.product_id", product)
+    .then((productQuantity) => {
+      if (parseInt(productQuantity[0].quantity) >= parseInt(quantity)) {
+        console.log(true);
+        db.transaction((trx) => {
+          trx
+            .insert({
+              quantity: quantity,
+              product: product,
+              transfer_from: transfer_from,
+              created_on: created_on,
+            })
+            .into("outgoingtransfers")
+            .returning("*")
+            .then((data) => {
+              return trx("incomingtransfers")
+                .insert({
+                  quantity: quantity,
+                  product: product,
+                  transfer_to: transfer_to,
+                  transfer_from: transfer_from,
+                  created_on: created_on,
+                })
+                .returning("*")
+                .then((data) => {
+                  res.status(200).json("transfer successful");
+                })
+                .catch((err) => res.status(400).json({ Error: "bad request" }));
+            })
+            .then(trx.commit)
+            .catch(trx.rollback);
+        });
+      } else {
+        res.status(500);
+      }
+    })
+    .catch((error) => res.status(500).json({ Error: "insufficient products" }));
 };
 
 const getTransferByWarehouseId = (req, res) => {
@@ -78,7 +77,7 @@ const getTransferByWarehouseId = (req, res) => {
 };
 
 const getTransfersMadeByWarehouseId = (req, res) => {
-  console.log(req.params)
+  console.log(req.params);
   const { users } = req.params;
   db("outgoingtransfers")
     .join("products", "outgoingtransfers.product", "=", "products.product_id")

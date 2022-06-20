@@ -6,7 +6,7 @@
  */
 
 //const { returning } = require("../../../data/db");
-const db = require("../../../data/db");
+const db = require("../../../config/db");
 
 const createSales = (req, res) => {
   const {

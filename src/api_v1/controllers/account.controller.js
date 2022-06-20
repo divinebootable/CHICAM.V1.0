@@ -10,7 +10,7 @@ const jwt = require("jsonwebtoken");
 
 require("dotenv").config();
 
-const db = require("../../../data/db");
+const db = require("../../../config/db");
 
 const getAllAccounts = (req, res) => {
   db.select("*")
@@ -140,7 +140,7 @@ const signIn = (req, res) => {
 };
 
 const blockAccount = (req, res) => {
-    console.log(req.body)
+  console.log(req.body);
   const { users } = req.body;
   db.select("users_id")
     .from("users")
@@ -162,7 +162,7 @@ const blockAccount = (req, res) => {
 };
 
 const UnBlockAccount = (req, res) => {
-    console.log(req.body)
+  console.log(req.body);
   const { users } = req.body;
   db.select("users_id")
     .from("users")

@@ -5,7 +5,7 @@
  * Author: Monyuy Divine Kongadzem
  */
 
-const db = require("../../../data/db");
+const db = require("../../../config/db");
 
 const createExpense = (req, res) => {
   const { expense, amount, users, created_on } = req.body;

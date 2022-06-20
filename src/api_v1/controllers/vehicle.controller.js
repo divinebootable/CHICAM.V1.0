@@ -5,7 +5,7 @@
  * Author: Monyuy Divine Kongadzem
  */
 
-const db = require("../../../data/db");
+const db = require("../../../config/db");
 
 const createVehicle = (req, res) => {
   const { vehicle_name, created_on } = req.body;

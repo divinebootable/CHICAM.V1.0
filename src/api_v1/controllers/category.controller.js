@@ -7,7 +7,7 @@
 
 // error
 
-const db = require("../../../data/db");
+const db = require("../../../config/db");
 
 const createCategory = (req, res) => {
   const { category, created_on } = req.body;

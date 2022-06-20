@@ -5,7 +5,7 @@
  * Author: Monyuy Divine Kongadzem
  */
 
-const db = require("../../../data/db");
+const db = require("../../../config/db");
 
 const addProduct = (req, res) => {
   const {
@@ -110,22 +110,23 @@ const getAllproducts = (req, res) => {
     .catch((err) => res.status(400).json({ Error: "bad request" }));
 };
 
-const getTotalOfAllProductsPerWarehouse = (req,res)=>{
-db.raw(`select sum(quantity), users.warehouse from products join users on products.users=users.users_id group by users.warehouse`)
-.then((product)=>{
-    res.json(product)
-  })
-  .catch((err) => res.status(400).json({ Error: "bad request" }));
+const getTotalOfAllProductsPerWarehouse = (req, res) => {
+  db.raw(
+    `select sum(quantity), users.warehouse from products join users on products.users=users.users_id group by users.warehouse`
+  )
+    .then((product) => {
+      res.json(product);
+    })
+    .catch((err) => res.status(400).json({ Error: "bad request" }));
+};
 
-}
-
-const totalNumberOfproducts = (req,res)=>{
- db.raw(`select sum(quantity) from products`)
-  .then((product)=>{
-    res.json(product)
-  })
-  .catch((err) => res.status(400).json({ Error: "bad request" }));
-}
+const totalNumberOfproducts = (req, res) => {
+  db.raw(`select sum(quantity) from products`)
+    .then((product) => {
+      res.json(product);
+    })
+    .catch((err) => res.status(400).json({ Error: "bad request" }));
+};
 
 const updateProduct = (req, res) => {
   const {
@@ -178,5 +179,5 @@ module.exports = {
   getAllproducts,
   updateProduct,
   totalNumberOfproducts,
-  getTotalOfAllProductsPerWarehouse 
+  getTotalOfAllProductsPerWarehouse,
 };

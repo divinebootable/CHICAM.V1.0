@@ -5,16 +5,10 @@
  * Author: Monyuy Divine Kongadzem
  */
 
-const db = require("../../../data/db");
+const db = require("../../../config/db");
 
 const createPayment = (req, res) => {
-  const {
-    amount_paid,
-    pending_amount,
-    users,
-    sales,
-    created_on,
-  } = req.body;
+  const { amount_paid, pending_amount, users, sales, created_on } = req.body;
   console.log(req.body);
   db("expenses")
     .insert({
@@ -132,5 +126,5 @@ const deleteExpense = (req, res) => {
 module.exports = {
   createPayment,
   getPaymentByWarehouseId,
-  getAllPayments
+  getAllPayments,
 };
