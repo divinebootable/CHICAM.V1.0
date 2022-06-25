@@ -9,19 +9,21 @@ const db = require("../../../config/db");
 
 const addProduct = (req, res) => {
   const {
+    product_name,
+    code,
     size,
     price,
     quantity,
     category,
     users,
     brand,
-    profile,
-    vehicle,
     filepath,
     created_on,
   } = req.body;
   db("products")
     .insert({
+      product_name,
+      code,
       size,
       price,
       quantity,
@@ -51,6 +53,8 @@ const getProductsByWarehouseId = (req, res) => {
     .join("profile", "products.profile", "=", "profile.profile_id")
     .join("vehicle", "products.vehicle", "=", "vehicle.vehicle_id")
     .select(
+      "products.code",
+      "products.product_name",
       "products.product_id",
       "products.size",
       "products.price",
@@ -58,8 +62,6 @@ const getProductsByWarehouseId = (req, res) => {
       "products.filepath",
       "category.category",
       "brand.brand_name",
-      "profile.profile_name",
-      "vehicle.vehicle_name",
       "products.created_on"
     )
     .where("products.users", users)
@@ -82,6 +84,8 @@ const getAllproducts = (req, res) => {
     .join("vehicle", "products.vehicle", "=", "vehicle.vehicle_id")
     .join("users", "products.users", "=", "users.users_id")
     .select(
+      "products.code",
+      "products.product_name",
       "products.product_id",
       "products.size",
       "products.price",
@@ -91,10 +95,6 @@ const getAllproducts = (req, res) => {
       "category.category_id",
       "brand.brand_name",
       "brand.brand_id",
-      "profile.profile_name",
-      "profile.profile_id",
-      "vehicle.vehicle_name",
-      "vehicle.vehicle_id",
       "products.created_on",
       "users.warehouse",
       "users.users_id"
@@ -131,14 +131,14 @@ const totalNumberOfproducts = (req, res) => {
 const updateProduct = (req, res) => {
   const {
     product_id,
+    product_name,
+    code,
     size,
     price,
     quantity,
     category,
     users,
     brand,
-    profile,
-    vehicle,
     filepath,
   } = req.body;
   console.log(req.body);
@@ -149,13 +149,13 @@ const updateProduct = (req, res) => {
       if (data.length) {
         db("products")
           .update({
+            product_name,
+            code,
             size,
             price,
             quantity,
             category,
             users,
-            brand,
-            profile,
             vehicle,
             filepath,
           })

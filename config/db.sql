@@ -6,9 +6,11 @@ create table users(
     role VARCHAR NOT NULL DEFAULT 'user',
     warehouse VARCHAR,
     is_delete boolean NOT NULL DEFAULT FALSE,
-    created_on TIMESTAMP NOT NULL,
+    created_on date NOT NULL DEFAULT current_timestamp,
     blocked boolean NOT NULL DEFAULT FALSE
 );
+INSERT INTO users(username,password,role,created_on) 
+VALUES ('user1','user@123#','admin',current_timestamp);
 
 create table login(
      login_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -20,25 +22,25 @@ create table login(
 create table brand(
     brand_id serial PRIMARY KEY,
     brand_name VARCHAR,
-    created_on TIMESTAMP NOT NULL
+     created_on date NOT NULL DEFAULT current_timestamp
 );
 
 create table vehicle(
     vehicle_id serial PRIMARY KEY,
     vehicle_name VARCHAR,
-    created_on TIMESTAMP NOT NULL 
+    created_on date NOT NULL DEFAULT current_timestamp 
 );
 
 create table profile(
     profile_id serial PRIMARY KEY,
     profile_name VARCHAR,
-    created_on TIMESTAMP NOT NULL 
+    created_on date NOT NULL DEFAULT current_timestamp 
 );
 
 create table category(
     category_id serial PRIMARY KEY,
     category VARCHAR,
-    created_on TIMESTAMP NOT NULL 
+    created_on date NOT NULL DEFAULT current_timestamp 
 );
 
 create table products(
@@ -55,7 +57,7 @@ create table products(
     filepath VARCHAR(255),
     sold boolean NOT NULL DEFAULT FALSE,
     is_delete boolean NOT NULL DEFAULT FALSE,   
-    created_on TIMESTAMP NOT NULL,
+    created_on date NOT NULL DEFAULT current_timestamp,
     FOREIGN KEY (users) REFERENCES users(users_id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (brand) REFERENCES brand(brand_id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (profile) REFERENCES profile(profile_id) ON UPDATE CASCADE ON DELETE CASCADE,
